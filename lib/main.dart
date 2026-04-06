@@ -82,10 +82,15 @@ class MainNavigationShell extends StatefulWidget {
 }
 
 class _MainNavigationShellState extends State<MainNavigationShell> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
   void _navigateTo(Widget screen) {
-    Navigator.pop(context); // Close drawer
+    // Close the drawer only when it is open.
+    if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+      Navigator.pop(context);
+    }
+
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
@@ -102,6 +107,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text(
           'INELEC APP',

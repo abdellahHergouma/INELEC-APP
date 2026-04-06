@@ -122,9 +122,27 @@ class ExamScheduleScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Exams Schedule',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_circle_left_outlined,
+              size: 30,
+              color: Colors.white,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.school, color: Colors.white, size: 30),
+              SizedBox(width: 8),
+              Text(
+                'Exams Schedule',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           backgroundColor: headerColor,
           centerTitle: true,

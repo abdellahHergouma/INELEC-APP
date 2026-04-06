@@ -39,7 +39,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Timetable Calendar'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(Icons.school, color: Color(0xFF701B99), size: 30),
+            SizedBox(width: 8),
+            Text('Timetable Calendar'),
+          ],
+        ),
         actions: [
           PopupMenuButton<CalendarView>(
             onSelected: (CalendarView view) {
@@ -92,6 +99,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           timeInterval: Duration(minutes: 60),
           timeIntervalHeight: -1, // Auto-fit
           timeRulerSize: 60,
+          nonWorkingDays: <int>[DateTime.friday, DateTime.saturday],
         ),
         monthViewSettings: const MonthViewSettings(
           appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
@@ -135,9 +143,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           // Handle view changes if needed
           // View changed details available: details.visibleDates
         },
-        firstDayOfWeek: 1, // Monday
-        minDate: DateTime.now().subtract(const Duration(days: 365)),
-        maxDate: DateTime.now().add(const Duration(days: 365)),
+        firstDayOfWeek: 7, // Sunday
       ),
     );
   }
