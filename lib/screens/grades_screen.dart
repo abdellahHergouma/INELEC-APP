@@ -101,6 +101,23 @@ class _GradesScreenState extends State<GradesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final headingBackgroundColor = isDarkMode
+        ? Colors.grey[850]
+        : const Color(0xFFEDE6F3);
+    final headingTextColor = isDarkMode ? Colors.white70 : Colors.black;
+    final cardBackgroundColor = isDarkMode
+        ? Colors.grey[900]
+        : const Color(0xFFF3F0FA);
+    final cardBorderColor = isDarkMode
+        ? Colors.grey[700]
+        : const Color(0xFFDDD7EB);
+    final bodyTextColor = isDarkMode ? Colors.grey[200] : Colors.black;
+    final secondaryTextColor = isDarkMode ? Colors.grey[400] : Colors.grey[700];
+    final resultTextColor = _entries.isEmpty
+        ? (isDarkMode ? Colors.grey[500] : Colors.grey)
+        : (_isPassed ? Colors.green : Colors.red);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -110,13 +127,6 @@ class _GradesScreenState extends State<GradesScreen> {
             children: [
               Row(
                 children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_circle_left_outlined,
-                      size: 30,
-                    ),
-                    onPressed: () => Navigator.maybePop(context),
-                  ),
                   const Spacer(),
                   const Icon(Icons.school, color: Color(0xFF701B99), size: 50),
                   const Spacer(),
@@ -227,7 +237,7 @@ class _GradesScreenState extends State<GradesScreen> {
                         child: Text(
                           'Add modules to calculate your weighted average.',
                           style: TextStyle(
-                            color: Colors.grey[700],
+                            color: secondaryTextColor,
                             fontSize: 16,
                           ),
                           textAlign: TextAlign.center,
@@ -245,40 +255,65 @@ class _GradesScreenState extends State<GradesScreen> {
                         child: SingleChildScrollView(
                           child: DataTable(
                             headingRowColor: WidgetStateProperty.all(
-                              const Color(0xFFEDE6F3),
+                              headingBackgroundColor,
                             ),
                             columnSpacing: 16,
-                            columns: const [
+                            columns: [
                               DataColumn(
                                 label: Text(
                                   'Module',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: headingTextColor,
+                                  ),
                                 ),
                               ),
                               DataColumn(
                                 label: Text(
                                   'Grade',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: headingTextColor,
+                                  ),
                                 ),
                               ),
                               DataColumn(
                                 label: Text(
                                   'Coeff',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: headingTextColor,
+                                  ),
                                 ),
                               ),
-                              DataColumn(label: Text('')),
+                              DataColumn(
+                                label: Text(
+                                  '',
+                                  style: TextStyle(color: headingTextColor),
+                                ),
+                              ),
                             ],
                             rows: List.generate(_entries.length, (index) {
                               final entry = _entries[index];
                               return DataRow(
                                 cells: [
-                                  DataCell(Text(entry.module)),
                                   DataCell(
-                                    Text(entry.grade.toStringAsFixed(1)),
+                                    Text(
+                                      entry.module,
+                                      style: TextStyle(color: bodyTextColor),
+                                    ),
                                   ),
                                   DataCell(
-                                    Text(entry.coeff.toStringAsFixed(1)),
+                                    Text(
+                                      entry.grade.toStringAsFixed(1),
+                                      style: TextStyle(color: bodyTextColor),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      entry.coeff.toStringAsFixed(1),
+                                      style: TextStyle(color: bodyTextColor),
+                                    ),
                                   ),
                                   DataCell(
                                     IconButton(
@@ -304,29 +339,31 @@ class _GradesScreenState extends State<GradesScreen> {
                   vertical: 18,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3F0FA),
+                  color: cardBackgroundColor,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFDDD7EB)),
+                  border: Border.all(color: cardBorderColor!),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Weighted Average: ${_weightedAverage.toStringAsFixed(2)}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: bodyTextColor,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Result:',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
+                            color: bodyTextColor,
                           ),
                         ),
                         Text(
@@ -336,9 +373,7 @@ class _GradesScreenState extends State<GradesScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: _entries.isEmpty
-                                ? Colors.grey
-                                : (_isPassed ? Colors.green : Colors.red),
+                            color: resultTextColor,
                           ),
                         ),
                       ],
