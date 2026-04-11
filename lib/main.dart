@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Ensure these file names match your actual filenames in lib/screens/
 import 'screens/home_screen.dart';
@@ -9,12 +10,13 @@ import 'screens/modules_screen.dart';
 import 'screens/assignments_screen.dart';
 import 'screens/attendance_screen.dart';
 import 'screens/grades_screen.dart'; // This file should contain class GradesScreen
-import 'screens/planner_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/settings_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Added device preview for easier testing on different screen sizes during development.
   runApp(
     DevicePreview(
@@ -32,9 +34,56 @@ class InelecApp extends StatefulWidget {
 }
 
 class _InelecAppState extends State<InelecApp> {
+  static const String _themeModeKey = 'theme_mode';
+
   final ValueNotifier<ThemeMode> _themeModeNotifier = ValueNotifier(
     ThemeMode.light,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemeMode();
+    _themeModeNotifier.addListener(() {
+      _saveThemeMode(_themeModeNotifier.value);
+    });
+  }
+
+  Future<void> _loadThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedValue = prefs.getString(_themeModeKey);
+    final mode = _themeModeFromString(storedValue) ?? ThemeMode.light;
+    _themeModeNotifier.value = mode;
+  }
+
+  Future<void> _saveThemeMode(ThemeMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_themeModeKey, _themeModeToString(mode));
+  }
+
+  String _themeModeToString(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.light:
+        return 'light';
+      case ThemeMode.dark:
+        return 'dark';
+      case ThemeMode.system:
+        return 'system';
+    }
+  }
+
+  ThemeMode? _themeModeFromString(String? value) {
+    switch (value) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      case 'system':
+        return ThemeMode.system;
+      default:
+        return null;
+    }
+  }
 
   @override
   void dispose() {
@@ -97,6 +146,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   List<Widget> get _bottomBarScreens => [
     HomeScreen(
       onAssignmentsTap: () => setState(() => _selectedIndex = 2),
+      onGradesTap: () => setState(() => _selectedIndex = 4),
     ), // Main Menu with the 4 big buttons
     const ModulesScreen(), // Modules list
     const AssignmentsScreen(), // Assignments view
@@ -133,11 +183,6 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
               child: Center(
                 child: Icon(Icons.school, color: Colors.white, size: 60),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.calculate_outlined),
-              title: const Text('Grade Planner'),
-              onTap: () => _navigateTo(const GradePlannerScreen()),
             ),
             ListTile(
               leading: const Icon(Icons.calendar_month_outlined),

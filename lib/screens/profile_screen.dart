@@ -5,11 +5,17 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final labelColor = isDarkMode ? Colors.grey[300] : Colors.black87;
+    final valueColor = isDarkMode ? Colors.grey[400] : Colors.grey[700];
+    final studentIdColor = isDarkMode ? Colors.grey[400] : Colors.grey[600];
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_circle_left_outlined, size: 30),
-          onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+          onPressed: () =>
+              Navigator.of(context).popUntil((route) => route.isFirst),
         ),
         title: Row(
           mainAxisSize: MainAxisSize.min,
@@ -46,21 +52,41 @@ class ProfileScreen extends StatelessWidget {
             // Student ID
             Text(
               'Student ID: 242448635001',
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 16, color: studentIdColor),
             ),
             const SizedBox(height: 30),
             // Profile Information Cards
             _buildProfileCard('Academic Information', [
-              _buildInfoRow('Program', 'Electrical and Electronic Engineering'),
-              _buildInfoRow('Year', '2nd Year'),
-              _buildInfoRow('Semester', 'Spring 2026'),
-              _buildInfoRow('Moyenne', '13.8'),
+              _buildInfoRow(
+                'Program',
+                'Electrical and Electronic Engineering',
+                labelColor,
+                valueColor,
+              ),
+              _buildInfoRow('Year', '2nd Year', labelColor, valueColor),
+              _buildInfoRow('Semester', 'Spring 2026', labelColor, valueColor),
+              _buildInfoRow('Moyenne', '13.8', labelColor, valueColor),
             ]),
             const SizedBox(height: 20),
             _buildProfileCard('Contact Information', [
-              _buildInfoRow('Email', 'abdellah.benyammi@inelec.edu'),
-              _buildInfoRow('Phone', '+213 552 345 678'),
-              _buildInfoRow('Address', 'Algiers, Algeria'),
+              _buildInfoRow(
+                'Email',
+                'abdellah.benyammi@inelec.edu',
+                labelColor,
+                valueColor,
+              ),
+              _buildInfoRow(
+                'Phone',
+                '+213 552 345 678',
+                labelColor,
+                valueColor,
+              ),
+              _buildInfoRow(
+                'Address',
+                'Algiers, Algeria',
+                labelColor,
+                valueColor,
+              ),
             ]),
             const SizedBox(height: 30),
             // Edit Profile Button
@@ -111,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF701B99),
+                color: Color(0xFF9C4BD8),
               ),
             ),
             const SizedBox(height: 15),
@@ -122,7 +148,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(
+    String label,
+    String value,
+    Color? labelColor,
+    Color? valueColor,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -132,14 +163,11 @@ class ProfileScreen extends StatelessWidget {
             width: 100,
             child: Text(
               '$label:',
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w500, color: labelColor),
             ),
           ),
           Expanded(
-            child: Text(value, style: TextStyle(color: Colors.grey[700])),
+            child: Text(value, style: TextStyle(color: valueColor)),
           ),
         ],
       ),

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'calendar_screen.dart';
+import 'timetable_screen.dart';
 import 'assignments_screen.dart';
 import 'exam_schedule_screen.dart';
 import 'grades_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, this.onAssignmentsTap});
+  const HomeScreen({super.key, this.onAssignmentsTap, this.onGradesTap});
 
   final VoidCallback? onAssignmentsTap;
+  final VoidCallback? onGradesTap;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,9 @@ class HomeScreen extends StatelessWidget {
             _buildMenuButton(context, Icons.grid_view, 'Time Table', () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CalendarScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const TimetableScreen(),
+                ),
               );
             }),
             _buildMenuButton(context, Icons.access_time, 'Assignments', () {
@@ -62,10 +65,14 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             _buildMenuButton(context, Icons.calculate, 'Grade Calculator', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const GradesScreen()),
-              );
+              if (onGradesTap != null) {
+                onGradesTap!();
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GradesScreen()),
+                );
+              }
             }),
 
             const SizedBox(
@@ -100,7 +107,11 @@ class HomeScreen extends StatelessWidget {
             child: Row(
               children: [
                 const SizedBox(width: 20),
-                Icon(icon, color: Colors.black, size: 30),
+                Icon(
+                  icon,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  size: 30,
+                ),
                 const SizedBox(width: 20),
                 Text(
                   title,
