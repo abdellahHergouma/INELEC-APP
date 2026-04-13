@@ -148,7 +148,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       onAssignmentsTap: () => setState(() => _selectedIndex = 2),
       onGradesTap: () => setState(() => _selectedIndex = 4),
     ), // Main Menu with the 4 big buttons
-    const ModulesScreen(), // Modules list
+     ModulesScreen(), // Modules list
     const AssignmentsScreen(), // Assignments view
     const AttendanceScreen(), // Attendance view
     const GradesScreen(), // Grade Calculator / Grades view
@@ -206,7 +206,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF701B99),
+        selectedItemColor: const Color(0xFFA67C52),
         unselectedItemColor: Colors.grey,
         onTap: (index) => setState(() => _selectedIndex = index),
         items: const [
