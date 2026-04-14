@@ -101,21 +101,15 @@ class _GradesScreenState extends State<GradesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final headingBackgroundColor = isDarkMode
-        ? Colors.grey[850]
-        : const Color(0xFFEDE6F3);
-    final headingTextColor = isDarkMode ? Colors.white70 : Colors.black;
-    final cardBackgroundColor = isDarkMode
-        ? Colors.grey[900]
-        : const Color(0xFFF3F0FA);
-    final cardBorderColor = isDarkMode
-        ? Colors.grey[700]
-        : const Color(0xFFDDD7EB);
-    final bodyTextColor = isDarkMode ? Colors.grey[200] : Colors.black;
-    final secondaryTextColor = isDarkMode ? Colors.grey[400] : Colors.grey[700];
+    final colorScheme = Theme.of(context).colorScheme;
+    final headingBackgroundColor = colorScheme.primaryContainer;
+    final headingTextColor = colorScheme.onPrimaryContainer;
+    final cardBackgroundColor = colorScheme.surfaceVariant;
+    final cardBorderColor = colorScheme.outline;
+    final bodyTextColor = colorScheme.onSurface;
+    final secondaryTextColor = colorScheme.onBackground.withOpacity(0.7);
     final resultTextColor = _entries.isEmpty
-        ? (isDarkMode ? Colors.grey[500] : Colors.grey)
+        ? colorScheme.onSurface.withOpacity(0.7)
         : (_isPassed ? Colors.green : Colors.red);
 
     return Scaffold(
@@ -128,7 +122,11 @@ class _GradesScreenState extends State<GradesScreen> {
               Row(
                 children: [
                   const Spacer(),
-                  const Icon(Icons.school, color: Color(0xFF701B99), size: 50),
+                  Icon(
+                    Icons.school,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 50,
+                  ),
                   const Spacer(),
                   const SizedBox(width: 48),
                 ],
@@ -221,7 +219,9 @@ class _GradesScreenState extends State<GradesScreen> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF701B99),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
                         onPressed: _addEntry,
@@ -247,7 +247,7 @@ class _GradesScreenState extends State<GradesScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: const Color(0xFF701B99),
+                            color: Theme.of(context).colorScheme.primary,
                             width: 1.3,
                           ),
                           borderRadius: BorderRadius.circular(16),
@@ -341,7 +341,7 @@ class _GradesScreenState extends State<GradesScreen> {
                 decoration: BoxDecoration(
                   color: cardBackgroundColor,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: cardBorderColor!),
+                  border: Border.all(color: cardBorderColor),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
