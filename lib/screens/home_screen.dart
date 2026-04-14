@@ -10,79 +10,89 @@ class HomeScreen extends StatelessWidget {
   final VoidCallback? onAssignmentsTap;
   final VoidCallback? onGradesTap;
 
+  
+  static const Color primaryColor = Color(0xFF00695C); 
+  static const Color secondaryColor = Color(0xFF004D40); 
+  static const Color accentColor = Color(0xFFA67C52); 
+  static const Color cardColor = Color(0xFFF5F5F5); 
   @override
   Widget build(BuildContext context) {
-    // Wrap with SingleChildScrollView to prevent overflow
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 20), // Spacing from top
-            // The Purple Cap Icon
-            Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: const Color(0xFF701B99),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const Icon(Icons.school, color: Colors.white, size: 40),
-            ),
-            const SizedBox(height: 40),
-
-            // Navigation Buttons
-            _buildMenuButton(context, Icons.grid_view, 'Time Table', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TimetableScreen(),
-                ),
-              );
-            }),
-            _buildMenuButton(context, Icons.access_time, 'Assignments', () {
-              if (onAssignmentsTap != null) {
-                onAssignmentsTap!();
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AssignmentsScreen(),
-                  ),
-                );
-              }
-            }),
-            _buildMenuButton(
-              context,
-              Icons.calendar_today,
-              'Exam Schedule',
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ExamScheduleScreen(),
-                  ),
-                );
-              },
-            ),
-            _buildMenuButton(context, Icons.calculate, 'Grade Calculator', () {
-              if (onGradesTap != null) {
-                onGradesTap!();
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const GradesScreen()),
-                );
-              }
-            }),
-
-            const SizedBox(
-              height: 20,
-            ), // Bottom padding to ensure last item is clear
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            primaryColor,
+            secondaryColor,
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+
+          
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  
+                  color: Colors.black.withOpacity(0.2), 
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Icon(Icons.school, color: accentColor, size: 40),
+              ),
+
+              const SizedBox(height: 40),
+
+              // 🔘 Buttons
+              _buildMenuButton(context, Icons.grid_view, 'Time Table', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TimetableScreen()),
+                );
+              }),
+
+              _buildMenuButton(context, Icons.access_time, 'Assignments', () {
+                if (onAssignmentsTap != null) {
+                  onAssignmentsTap!();
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AssignmentsScreen()),
+                  );
+                }
+              }),
+
+              _buildMenuButton(context, Icons.calendar_today, 'Exam Schedule', () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ExamScheduleScreen()),
+                );
+              }),
+
+              _buildMenuButton(context, Icons.calculate, 'Grade Calculator', () {
+                if (onGradesTap != null) {
+                  onGradesTap!();
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const GradesScreen()),
+                  );
+                }
+              }),
+
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
   }
+
 
   Widget _buildMenuButton(
     BuildContext context,
@@ -93,35 +103,39 @@ class HomeScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
       child: InkWell(
-        // Use InkWell for better touch feedback
         onTap: onTap,
         borderRadius: BorderRadius.circular(15),
         child: Container(
           height: 80,
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFF701B99), width: 1.5),
+            color: cardColor, 
             borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          child: Center(
-            // Using Center + Row for more control than ListTile
-            child: Row(
-              children: [
-                const SizedBox(width: 20),
-                Icon(
-                  icon,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 30,
+          child: Row(
+            children: [
+              const SizedBox(width: 20),
+    
+              Icon(icon, color: accentColor, size: 30),
+              const SizedBox(width: 20),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D2D2D), 
                 ),
-                const SizedBox(width: 20),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              const SizedBox(width: 20),
+            ],
           ),
         ),
       ),
