@@ -37,14 +37,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: Row(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.school, color: Color(0xFF701B99), size: 30),
-            SizedBox(width: 8),
-            Text('Timetable Calendar'),
+          children: [
+            Icon(Icons.school, color: colorScheme.primary, size: 30),
+            const SizedBox(width: 8),
+            const Text('Timetable Calendar'),
           ],
         ),
         actions: [
@@ -105,28 +106,28 @@ class _CalendarScreenState extends State<CalendarScreen> {
           appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
           showAgenda: true,
         ),
-        headerStyle: const CalendarHeaderStyle(
+        headerStyle: CalendarHeaderStyle(
           textStyle: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: colorScheme.onBackground,
           ),
         ),
-        viewHeaderStyle: const ViewHeaderStyle(
+        viewHeaderStyle: ViewHeaderStyle(
           dayTextStyle: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.black,
+            color: colorScheme.onBackground,
           ),
         ),
-        appointmentTextStyle: const TextStyle(
+        appointmentTextStyle: TextStyle(
           fontSize: 12,
-          color: Colors.white,
+          color: colorScheme.onPrimary,
         ),
-        cellBorderColor: Colors.grey.shade300,
+        cellBorderColor: colorScheme.outline,
         selectionDecoration: BoxDecoration(
           color: Colors.transparent,
-          border: Border.all(color: Colors.blue, width: 2),
+          border: Border.all(color: colorScheme.primary, width: 2),
           borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
         onTap: (CalendarTapDetails details) {

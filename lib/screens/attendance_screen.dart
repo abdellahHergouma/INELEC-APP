@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: AttendanceScreen(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(
+    const MaterialApp(
+      home: AttendanceScreen(),
+      debugShowCheckedModeBanner: false,
+    ),
+  );
 }
 
 class AttendanceScreen extends StatefulWidget {
@@ -15,39 +17,47 @@ class AttendanceScreen extends StatefulWidget {
 }
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
-  
   bool isLectureView = true;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F8),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("ATTENDANCE TRACKER", 
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
+        title: const Text(
+          "ATTENDANCE TRACKER",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
-        backgroundColor: const Color(0xFFA67C52),
+        backgroundColor: colorScheme.primary,
         elevation: 0,
       ),
       body: Column(
         children: [
-          _buildSummaryHeader(),
-          _buildToggleButtons(),
+          _buildSummaryHeader(context),
+          _buildToggleButtons(context),
           Expanded(
-            child: isLectureView ? _buildAttendanceList("Lecture") : _buildAttendanceList("TD"),
+            child: isLectureView
+                ? _buildAttendanceList("Lecture")
+                : _buildAttendanceList("TD"),
           ),
         ],
       ),
     );
   }
 
-  
-  Widget _buildSummaryHeader() {
+  Widget _buildSummaryHeader(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Color(0xFFA67C52),
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: colorScheme.primary,
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
         ),
@@ -66,14 +76,24 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   Widget _statItem(String label, String value) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 12),
+        ),
       ],
     );
   }
 
-  
-  Widget _buildToggleButtons() {
+  Widget _buildToggleButtons(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       child: Container(
@@ -89,12 +109,19 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 onTap: () => setState(() => isLectureView = true),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isLectureView ? const Color(0xFF004D40) : Colors.transparent,
+                    color: isLectureView
+                        ? colorScheme.primary
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(25),
                   ),
                   alignment: Alignment.center,
-                  child: Text("Lectures", 
-                    style: TextStyle(color: isLectureView ? Colors.white : Colors.black54, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    "Lectures",
+                    style: TextStyle(
+                      color: isLectureView ? Colors.white : Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -103,12 +130,19 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 onTap: () => setState(() => isLectureView = false),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: !isLectureView ? const Color(0xFF004D40) : Colors.transparent,
+                    color: !isLectureView
+                        ? colorScheme.primary
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(25),
                   ),
                   alignment: Alignment.center,
-                  child: Text("TD (Tutorials)", 
-                    style: TextStyle(color: !isLectureView ? Colors.white : Colors.black54, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    "TD (Tutorials)",
+                    style: TextStyle(
+                      color: !isLectureView ? Colors.white : Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -133,25 +167,32 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       itemCount: records.length,
       itemBuilder: (context, index) {
         bool isPresent = records[index]["status"] == "Present";
+        final colorScheme = Theme.of(context).colorScheme;
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
           elevation: 2,
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: isPresent ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+              backgroundColor: isPresent
+                  ? colorScheme.primary.withOpacity(0.12)
+                  : Colors.red.withOpacity(0.1),
               child: Icon(
                 isPresent ? Icons.check_circle : Icons.cancel,
-                color: isPresent ? Colors.green : Colors.red,
+                color: isPresent ? colorScheme.primary : Colors.red,
               ),
             ),
-            title: Text("${records[index]["module"]} ($type)", 
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(
+              "${records[index]["module"]} ($type)",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             subtitle: Text(records[index]["date"]!),
             trailing: Text(
               records[index]["status"]!,
               style: TextStyle(
-                color: isPresent ? Colors.green : Colors.red,
+                color: isPresent ? colorScheme.primary : Colors.red,
                 fontWeight: FontWeight.bold,
               ),
             ),

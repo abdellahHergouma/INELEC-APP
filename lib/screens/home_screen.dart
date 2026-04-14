@@ -10,20 +10,17 @@ class HomeScreen extends StatelessWidget {
   final VoidCallback? onAssignmentsTap;
   final VoidCallback? onGradesTap;
 
-  
-  static const Color primaryColor = Color(0xFF00695C); 
-  static const Color secondaryColor = Color(0xFF004D40); 
-  static const Color accentColor = Color(0xFFA67C52); 
-  static const Color cardColor = Color(0xFFF5F5F5); 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final primaryColor = colorScheme.primary;
+    final secondaryColor = colorScheme.primaryContainer;
+    final accentColor = colorScheme.onPrimary;
+
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            primaryColor,
-            secondaryColor,
-          ],
+          colors: [primaryColor, secondaryColor],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -35,15 +32,13 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
 
-          
               Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  
-                  color: Colors.black.withOpacity(0.2), 
+                  color: Colors.white.withOpacity(0.18),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: const Icon(Icons.school, color: accentColor, size: 40),
+                child: Icon(Icons.school, color: accentColor, size: 40),
               ),
 
               const SizedBox(height: 40),
@@ -52,7 +47,9 @@ class HomeScreen extends StatelessWidget {
               _buildMenuButton(context, Icons.grid_view, 'Time Table', () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const TimetableScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const TimetableScreen(),
+                  ),
                 );
               }),
 
@@ -62,28 +59,44 @@ class HomeScreen extends StatelessWidget {
                 } else {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AssignmentsScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const AssignmentsScreen(),
+                    ),
                   );
                 }
               }),
 
-              _buildMenuButton(context, Icons.calendar_today, 'Exam Schedule', () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ExamScheduleScreen()),
-                );
-              }),
-
-              _buildMenuButton(context, Icons.calculate, 'Grade Calculator', () {
-                if (onGradesTap != null) {
-                  onGradesTap!();
-                } else {
+              _buildMenuButton(
+                context,
+                Icons.calendar_today,
+                'Exam Schedule',
+                () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const GradesScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const ExamScheduleScreen(),
+                    ),
                   );
-                }
-              }),
+                },
+              ),
+
+              _buildMenuButton(
+                context,
+                Icons.calculate,
+                'Grade Calculator',
+                () {
+                  if (onGradesTap != null) {
+                    onGradesTap!();
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GradesScreen(),
+                      ),
+                    );
+                  }
+                },
+              ),
 
               const SizedBox(height: 20),
             ],
@@ -92,7 +105,6 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildMenuButton(
     BuildContext context,
@@ -108,7 +120,7 @@ class HomeScreen extends StatelessWidget {
         child: Container(
           height: 80,
           decoration: BoxDecoration(
-            color: cardColor, 
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
@@ -121,15 +133,18 @@ class HomeScreen extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 20),
-    
-              Icon(icon, color: accentColor, size: 30),
+              Icon(
+                icon,
+                color: Theme.of(context).colorScheme.primary,
+                size: 30,
+              ),
               const SizedBox(width: 20),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D2D2D), 
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const Spacer(),

@@ -5,10 +5,10 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final labelColor = isDarkMode ? Colors.grey[300] : Colors.black87;
-    final valueColor = isDarkMode ? Colors.grey[400] : Colors.grey[700];
-    final studentIdColor = isDarkMode ? Colors.grey[400] : Colors.grey[600];
+    final colorScheme = Theme.of(context).colorScheme;
+    final labelColor = colorScheme.onSurfaceVariant;
+    final valueColor = colorScheme.onSurface.withOpacity(0.8);
+    final studentIdColor = colorScheme.onSurfaceVariant;
 
     return Scaffold(
       appBar: AppBar(
@@ -19,10 +19,10 @@ class ProfileScreen extends StatelessWidget {
         ),
         title: Row(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.school, color: Color(0xFF701B99), size: 30),
-            SizedBox(width: 8),
-            Text('Profile'),
+          children: [
+            Icon(Icons.school, color: colorScheme.primary, size: 30),
+            const SizedBox(width: 8),
+            const Text('Profile'),
           ],
         ),
       ),
@@ -37,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: const Color(0xFF701B99),
+                color: colorScheme.primary,
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.person, color: Colors.white, size: 60),
@@ -56,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             // Profile Information Cards
-            _buildProfileCard('Academic Information', [
+            _buildProfileCard(context, 'Academic Information', [
               _buildInfoRow(
                 'Program',
                 'Electrical and Electronic Engineering',
@@ -68,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
               _buildInfoRow('Moyenne', '13.8', labelColor, valueColor),
             ]),
             const SizedBox(height: 20),
-            _buildProfileCard('Contact Information', [
+            _buildProfileCard(context, 'Contact Information', [
               _buildInfoRow(
                 'Email',
                 'abdellah.benyammi@inelec.edu',
@@ -101,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF701B99),
+                  backgroundColor: colorScheme.primary,
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -123,7 +123,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileCard(String title, List<Widget> children) {
+  Widget _buildProfileCard(
+    BuildContext context,
+    String title,
+    List<Widget> children,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -134,10 +139,10 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF9C4BD8),
+                color: colorScheme.primary,
               ),
             ),
             const SizedBox(height: 15),

@@ -63,7 +63,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: const [
-            Icon(Icons.school, color: Color(0xFF701B99), size: 30),
+            Icon(Icons.school, color: Colors.white, size: 30),
             SizedBox(width: 8),
             Text('Notifications'),
           ],

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'theme_config.dart';
 // Ensure these file names match your actual filenames in lib/screens/
 import 'screens/home_screen.dart';
 import 'screens/profile_screen.dart';
@@ -35,17 +36,26 @@ class InelecApp extends StatefulWidget {
 
 class _InelecAppState extends State<InelecApp> {
   static const String _themeModeKey = 'theme_mode';
+  static const String _themeChoiceKey = 'theme_choice';
 
   final ValueNotifier<ThemeMode> _themeModeNotifier = ValueNotifier(
     ThemeMode.light,
+  );
+
+  final ValueNotifier<AppColorTheme> _themeChoiceNotifier = ValueNotifier(
+    AppColorTheme.purple,
   );
 
   @override
   void initState() {
     super.initState();
     _loadThemeMode();
+    _loadThemeChoice();
     _themeModeNotifier.addListener(() {
       _saveThemeMode(_themeModeNotifier.value);
+    });
+    _themeChoiceNotifier.addListener(() {
+      _saveThemeChoice(_themeChoiceNotifier.value);
     });
   }
 
@@ -56,9 +66,21 @@ class _InelecAppState extends State<InelecApp> {
     _themeModeNotifier.value = mode;
   }
 
+  Future<void> _loadThemeChoice() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedValue = prefs.getString(_themeChoiceKey);
+    final theme = appColorThemeFromString(storedValue) ?? AppColorTheme.purple;
+    _themeChoiceNotifier.value = theme;
+  }
+
   Future<void> _saveThemeMode(ThemeMode mode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_themeModeKey, _themeModeToString(mode));
+  }
+
+  Future<void> _saveThemeChoice(AppColorTheme theme) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_themeChoiceKey, theme.storageKey);
   }
 
   String _themeModeToString(ThemeMode mode) {
@@ -93,28 +115,24 @@ class _InelecAppState extends State<InelecApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: _themeModeNotifier,
-      builder: (context, themeMode, child) {
-        return MaterialApp(
-          title: 'INELEC APP',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF701B99),
-            ),
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF701B99),
-              brightness: Brightness.dark,
-            ),
-            useMaterial3: true,
-          ),
-          themeMode: themeMode,
-          home: MainNavigationShell(themeModeNotifier: _themeModeNotifier),
+    return ValueListenableBuilder<AppColorTheme>(
+      valueListenable: _themeChoiceNotifier,
+      builder: (context, selectedTheme, child) {
+        return ValueListenableBuilder<ThemeMode>(
+          valueListenable: _themeModeNotifier,
+          builder: (context, themeMode, child) {
+            return MaterialApp(
+              title: 'INELEC APP',
+              debugShowCheckedModeBanner: false,
+              theme: appThemeData(selectedTheme, Brightness.light),
+              darkTheme: appThemeData(selectedTheme, Brightness.dark),
+              themeMode: themeMode,
+              home: MainNavigationShell(
+                themeModeNotifier: _themeModeNotifier,
+                themeChoiceNotifier: _themeChoiceNotifier,
+              ),
+            );
+          },
         );
       },
     );
@@ -122,9 +140,14 @@ class _InelecAppState extends State<InelecApp> {
 }
 
 class MainNavigationShell extends StatefulWidget {
-  const MainNavigationShell({super.key, required this.themeModeNotifier});
+  const MainNavigationShell({
+    super.key,
+    required this.themeModeNotifier,
+    required this.themeChoiceNotifier,
+  });
 
   final ValueNotifier<ThemeMode> themeModeNotifier;
+  final ValueNotifier<AppColorTheme> themeChoiceNotifier;
 
   @override
   State<MainNavigationShell> createState() => _MainNavigationShellState();
@@ -148,7 +171,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       onAssignmentsTap: () => setState(() => _selectedIndex = 2),
       onGradesTap: () => setState(() => _selectedIndex = 4),
     ), // Main Menu with the 4 big buttons
-     ModulesScreen(), // Modules list
+    ModulesScreen(), // Modules list
     const AssignmentsScreen(), // Assignments view
     const AttendanceScreen(), // Attendance view
     const GradesScreen(), // Grade Calculator / Grades view
@@ -178,9 +201,11 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       drawer: Drawer(
         child: Column(
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFF701B99)),
-              child: Center(
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: const Center(
                 child: Icon(Icons.school, color: Colors.white, size: 60),
               ),
             ),
@@ -195,7 +220,10 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
               leading: const Icon(Icons.settings_outlined),
               title: const Text('Settings'),
               onTap: () => _navigateTo(
-                SettingsScreen(themeModeNotifier: widget.themeModeNotifier),
+                SettingsScreen(
+                  themeModeNotifier: widget.themeModeNotifier,
+                  themeChoiceNotifier: widget.themeChoiceNotifier,
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -206,7 +234,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFFA67C52),
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Colors.grey,
         onTap: (index) => setState(() => _selectedIndex = index),
         items: const [

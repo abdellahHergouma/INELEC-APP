@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: ModulesScreen(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(
+    const MaterialApp(home: ModulesScreen(), debugShowCheckedModeBanner: false),
+  );
 }
 
 class ModulesScreen extends StatelessWidget {
@@ -15,9 +14,9 @@ class ModulesScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          backgroundColor: Color(0xFFA67C52),  // Dark green theme
+          backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0,
           title: const Text(
             'MODULES',
@@ -36,30 +35,26 @@ class ModulesScreen extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: [
-            _buildModuleList1(),
-            _buildModuleList2(),
-            const Center(child: Text('No exams scheduled for Semester 2')),
-          ],
+          children: [_buildModuleList1(context), _buildModuleList2(context)],
         ),
       ),
     );
   }
 
-  Widget _buildModuleList1() {
+  Widget _buildModuleList1(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-            
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'Semaster I',
                 style: TextStyle(
-                  color:Color(0xFF004D40), 
+                  color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -70,7 +65,7 @@ class ModulesScreen extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -89,8 +84,10 @@ class ModulesScreen extends StatelessWidget {
                   ModuleItemTile(title: "Physics I"),
                   ModuleItemTile(title: "Physics I Lab"),
                   ModuleItemTile(title: "English I"),
-                  ModuleItemTile(title: "Writing Methods, Ethics and Deontology"),
-                   ModuleItemTile(title: "Free and Open-Source Software"),
+                  ModuleItemTile(
+                    title: "Writing Methods, Ethics and Deontology",
+                  ),
+                  ModuleItemTile(title: "Free and Open-Source Software"),
                 ],
               ),
             ),
@@ -100,100 +97,86 @@ class ModulesScreen extends StatelessWidget {
     );
   }
 }
- Widget _buildModuleList2() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-            
-              SizedBox(width: 8),
-              Text(
-                'Semaster II',
-                style: TextStyle(
-                  color: Color(0xFF004D40),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    spreadRadius: 2,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: ListView(
-                // Add all your modules here
-                children: const [
-                  ModuleItemTile(title: "Math II "),
-                  ModuleItemTile(title: "Math III"),
-                  ModuleItemTile(title: "Chemistry II"),
-                  ModuleItemTile(title: "Physics II"),
-                  ModuleItemTile(title: "Physics II Lab"),
-                  ModuleItemTile(title: "English II"),
-                  ModuleItemTile(title: "Electrical Engineering I"),
-                  ModuleItemTile(title: "Electrical Engineering I Lab"),
-                   ModuleItemTile(title: "Introduction to C programming"),
-                   ModuleItemTile(title: "Oral Presentation and information techniques"),
-                ],
+
+Widget _buildModuleList2(BuildContext context) {
+  final colorScheme = Theme.of(context).colorScheme;
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const SizedBox(width: 8),
+            Text(
+              'Semaster II',
+              style: TextStyle(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withValues(alpha: 0.1),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                ),
+              ],
+            ),
+            child: ListView(
+              // Add all your modules here
+              children: const [
+                ModuleItemTile(title: "Math II "),
+                ModuleItemTile(title: "Math III"),
+                ModuleItemTile(title: "Chemistry II"),
+                ModuleItemTile(title: "Physics II"),
+                ModuleItemTile(title: "Physics II Lab"),
+                ModuleItemTile(title: "English II"),
+                ModuleItemTile(title: "Electrical Engineering I"),
+                ModuleItemTile(title: "Electrical Engineering I Lab"),
+                ModuleItemTile(title: "Introduction to C programming"),
+                ModuleItemTile(
+                  title: "Oral Presentation and information techniques",
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
-    );
-  }
-
+        ),
+      ],
+    ),
+  );
+}
 
 class ModuleItemTile extends StatelessWidget {
   final String title;
 
-  const ModuleItemTile({
-    super.key,
-    required this.title,
-  });
+  const ModuleItemTile({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
+          ),
           title: Text(
             title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
           ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              
-               
-                  
-                
-              
-              
-               
-                ],
-              ),
-            ),
-      ],   
-      
-  
-  );
+          trailing: Row(mainAxisSize: MainAxisSize.min, children: []),
+        ),
+      ],
+    );
   }
-  }
+}
